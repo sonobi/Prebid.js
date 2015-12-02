@@ -188,7 +188,13 @@ exports.getTopWindowUrl = function() {
 
 exports.logMessage = function(msg) {
 	if (debugTurnedOn() && hasConsoleLogger()) {
-		console.log('MESSAGE: ' + msg);
+		if(console.info){
+			console.info(msg);
+		}
+		else{
+			console.log('MESSAGE: ' + msg);
+		}
+		
 	}
 };
 
@@ -421,5 +427,31 @@ exports._map = function (object, callback) {
     output.push(callback(value, key, object));
   });
   return output;
+};
+
+exports.loadPixelUrl = function(doc, parentElement, src, uuid, evt){
+	var img, imgSrc;
+	if(doc && parentElement && src){
+		img = new Image();
+		img.id = uuid;
+		img.src = src;
+		img.height = 0;
+		img.width = 0;
+		img.style.display = 'none';
+		img.onload = function() {
+			try{
+				this.parentNode.removeChild(this);
+			}
+			catch(e){}
+		};
+		try{
+			parentElement.insertBefore(img, parentElement.firstChild);
+			this.logMessage('AppNexus Analytics event: ' + evt + ' URL: ' + src);
+		}
+		catch(e){
+			this.logError('Error logging impression for tag: ' + uuid + ' :' + e.message );
+		}
+		
+	}
 };
 

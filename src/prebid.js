@@ -9,7 +9,8 @@ var bidmanager = require('./bidmanager.js');
 var adaptermanager = require('./adaptermanager');
 var bidfactory = require('./bidfactory');
 var adloader = require('./adloader');
-var ga = require('./ga');
+var ga = require('./analyticAdapters/ga');
+var appnexusAnalytics = require('./analyticAdapters/appnexus');
 var events = require('./events');
 
 /* private variables */
@@ -853,8 +854,8 @@ pbjs.enableAnalytics = function(options){
 			utils.logError('Error calling GA: ', 'prebid.js', e);
 		}	
 	}
-	else if(options.provider === 'other_provider'){
-		//todo
+	else if(options.provider === 'appnexus'){
+		appnexusAnalytics.enableAnalytics(typeof options.options === 'undefined' ? {} :options.options );
 	}
 };
 
