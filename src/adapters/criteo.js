@@ -52,8 +52,13 @@ var CriteoAdapter = function CriteoAdapter() {
 					if (content) {
 						adResponse = bidfactory.createBid(1);
 						adResponse.bidderCode = 'criteo';
-
-						adResponse.keys = content.replace(/\;$/, '').split(';');
+						try{
+							adResponse.keys = content.replace(/\;$/, '').split(';');
+						}
+						catch(e){
+							utils.logError('criteo:_requestBid: error extracting target keys: ' + e.message);
+						}
+						
 					} else {
 						// Indicate an ad was not returned
 						adResponse = bidfactory.createBid(2);
