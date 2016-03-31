@@ -8,23 +8,22 @@
 
         var googletag = googletag || {};
         googletag.cmd = googletag.cmd || [];
+        googletag.cmd.push(function () {
+            googletag.pubads().disableInitialLoad();
+        });
 
         /* pbjs.initAdserver will be called either when all bids are back, or
          when the timeout is reached.
          */
         function initAdserver() {
             if (pbjs.initAdserverSet) return;
-            //load GPT library here
-            (function () {
-                var gads = document.createElement('script');
-                gads.async = true;
-                gads.type = 'text/javascript';
-                var useSSL = 'https:' == document.location.protocol;
-                gads.src = (useSSL ? 'https:' : 'http:') +
-                        '//www.googletagservices.com/tag/js/gpt.js';
-                var node = document.getElementsByTagName('script')[0];
-                node.parentNode.insertBefore(gads, node);
-            })();
+
+            googletag.cmd.push(function () {
+                pbjs.que.push(function () {
+                    pbjs.setTargetingForGPTAsync();
+                    googletag.pubads().refresh();
+                });
+            });
             pbjs.initAdserverSet = true;
         }
 
@@ -43,6 +42,18 @@
             pbs.src = '/build/dist/prebid.js';
             var target = d.getElementsByTagName("head")[0];
             target.insertBefore(pbs, target.firstChild);
+        })();
+
+        //load GPT library here
+        (function () {
+            var gads = document.createElement('script');
+            gads.async = true;
+            gads.type = 'text/javascript';
+            var useSSL = 'https:' == document.location.protocol;
+            gads.src = (useSSL ? 'https:' : 'http:') +
+                    '//www.googletagservices.com/tag/js/gpt.js';
+            var node = document.getElementsByTagName('script')[0];
+            node.parentNode.insertBefore(gads, node);
         })();
 
         pbjs.que.push(function () {
@@ -193,17 +204,18 @@
                             }
                         },
                         {
-                            bidder: 'triplelift',
-                            params: {
-                                inventoryCode: 'sortable_all_right_sports'
-                            }
-                        },
-                        {
                             bidder: 'brightcom',
                             params: {
                                 tagId: 16577 // Tag ID supplied by Brightcom - brightcom.com
                             }
-                        }]
+                        },
+                        {
+                            bidder: 'triplelift',
+                            params: {
+                                inventoryCode: 'sortable_all_right_sports'
+                            }
+                        }
+                    ]
                 }
             ];
 
