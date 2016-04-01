@@ -264,7 +264,7 @@ var bidmanager = require('../../src/bidmanager');
                         }
                 };
 
-                var expected = {"hb_bidder":  bidderCode, "hb_adid": adId,"hb_pb": 15.0 };
+                var expected = {"hb_bidder":  bidderCode, "hb_adid": adId,"hb_pb": 15.0, "hb_size":"300x250" };
                 var response = bidmanager.getKeyValueTargetingPairs(bidderCode, bid);
                 assert.deepEqual(response, expected);
 
