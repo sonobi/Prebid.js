@@ -1,6 +1,7 @@
 import { registerBidder } from 'src/adapters/bidderFactory';
 import { getTopWindowLocation, parseSizesInput } from 'src/utils';
 import * as utils from '../src/utils';
+import { config } from 'src/config';
 
 const BIDDER_CODE = 'sonobi';
 const STR_ENDPOINT = 'https://apex.go.sonobi.com/trinity.json';
@@ -45,7 +46,7 @@ export const spec = {
 
     const payload = {
       'key_maker': JSON.stringify(data),
-      'ref': getTopWindowLocation().host,
+      'ref': config.getConfig('publisherDomain') || getTopWindowLocation().host,
       's': utils.generateUUID(),
       'pv': PAGEVIEW_ID,
     };
